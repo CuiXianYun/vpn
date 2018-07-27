@@ -1,106 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/ProxyUrlLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:tag="ProxyUrl"
-        android:padding="13dp">
-
-        <TextView
-            android:id="@+id/textViewProxyUrlTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/config_url"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/textViewProxyUrl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/config_not_set_value"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    </LinearLayout>
-
-    <View
+    <TableLayout
+        android:id="@+id/tablelayout"
         android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:alpha="0.4" />
-
-    <LinearLayout
-        android:id="@+id/AppSelectLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:tag="AppSelect"
-        android:padding="13dp">
-
-        <TextView
-            android:id="@+id/textViewAppSelectTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/select_app"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/textViewAppSelectDetail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/select_app_detail"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    </LinearLayout>
-
-    <View
-        android:id="@+id/textViewAppSelectLine"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:alpha="0.4" />
-
-    <ScrollView
-        android:id="@+id/scrollViewLog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="fill_parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/ProxyUrlLayout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:tag="ProxyUrl"
+            android:padding="13dp">
 
             <TextView
-                android:id="@+id/textViewLog"
+                android:id="@+id/textViewProxyUrlTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="13dp"
+                android:text="@string/config_url"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/textViewProxyUrl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/config_not_set_value"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
-    </ScrollView>
 
-    <TableRow
-        android:layout_width="match_parent"
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:alpha="0.4" />
+
+        <LinearLayout
+            android:id="@+id/AppSelectLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:tag="AppSelect"
+            android:padding="13dp">
+
+            <TextView
+                android:id="@+id/textViewAppSelectTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/select_app"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/textViewAppSelectDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/select_app_detail"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/textViewAppSelectLine"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:alpha="0.4" />
+
+        <ScrollView
+            android:id="@+id/scrollViewLog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewLog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="13dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <TableRow
+            android:layout_width="match_parent"
         android:layout_height="match_parent"></TableRow>
 
-    <TableRow
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout android:layout_column="14"></FrameLayout>
+        </TableRow>
+
+    </TableLayout>
+
+    <LinearLayout
+        android:id="@+id/ly_tab_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></TableRow>
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_white"
+        android:orientation="horizontal">
 
-    <TableRow
+        <TextView
+            android:id="@+id/txt_channel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/tab_menu_bg"
+            android:drawablePadding="3dp"
+            android:drawableTop="@drawable/tab_menu_channel"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/tab_menu_alert"
+            android:textColor="@drawable/tab_menu_text"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txt_message"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/tab_menu_bg"
+            android:drawablePadding="3dp"
+            android:drawableTop="@drawable/tab_menu_message"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/tab_menu_profile"
+            android:textColor="@drawable/tab_menu_text"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txt_better"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/tab_menu_bg"
+            android:drawablePadding="3dp"
+            android:drawableTop="@drawable/tab_menu_better"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/tab_menu_pay"
+            android:textColor="@drawable/tab_menu_text"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/div_tab_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="2px"
+        android:background="@color/div_white"
+        android:layout_above="@id/ly_tab_bar"/>
 
-        <FrameLayout android:layout_column="14"></FrameLayout>
-    </TableRow>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/div_tab_bar"
+        android:id="@+id/ly_content">
 
-</TableLayout>
+    </FrameLayout>
+
+</RelativeLayout>

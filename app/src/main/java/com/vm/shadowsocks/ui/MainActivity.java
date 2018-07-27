@@ -3,6 +3,8 @@ package com.vm.shadowsocks.ui;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -21,8 +23,10 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +36,7 @@ import com.vm.shadowsocks.R;
 import com.vm.shadowsocks.core.AppInfo;
 import com.vm.shadowsocks.core.AppProxyManager;
 import com.vm.shadowsocks.core.LocalVpnService;
+import com.vm.shadowsocks.core.MyPreference;
 import com.vm.shadowsocks.core.ProxyConfig;
 
 import java.util.Calendar;
@@ -55,10 +60,27 @@ public class MainActivity extends Activity implements
     private TextView textViewProxyUrl, textViewProxyApp;
     private Calendar mCalendar;
 
+    private TextView txt_channel,txt_message,txt_better;
+    private TableLayout tableLayout;
+    private FrameLayout lyContent;
+
+    private LoginFragment fgLogin;  //登录
+    private UserFragment fgUser;    //用户
+    private VipFragment fgVip;
+    public  FragmentManager fManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d(TAG, "onCreate: 主Activity已经启动！！！");
         setContentView(R.layout.activity_main);
+
+
+        //初始化FragmentManager
+        fManager = getFragmentManager();
+        tableLayout = (TableLayout) findViewById(R.id.tablelayout);
+        lyContent = (FrameLayout) findViewById(R.id.ly_content);
 
         scrollViewLog = (ScrollView) findViewById(R.id.scrollViewLog);
         textViewLog = (TextView) findViewById(R.id.textViewLog);
@@ -87,7 +109,55 @@ public class MainActivity extends Activity implements
             ((ViewGroup) findViewById(R.id.AppSelectLayout).getParent()).removeView(findViewById(R.id.AppSelectLayout));
             ((ViewGroup) findViewById(R.id.textViewAppSelectLine).getParent()).removeView(findViewById(R.id.textViewAppSelectLine));
         }
+
+        bindViews();
+        //模拟第一次点击链接
+        txt_channel.performClick();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "生命周期 =======》》》》》》》 onStart: ");
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d(TAG, "鬼知道这是什么东西 =======》》》》》》》 onNewIntent");
+
+        //模拟第一次点击我的
+        txt_better.performLongClick();
+
+
+    }
+
+    //UI组件初始化与事件绑定
+    private void bindViews(){
+        txt_channel = findViewById(R.id.txt_channel);
+        txt_message = findViewById(R.id.txt_message);
+        txt_better  = findViewById(R.id.txt_better);
+
+        txt_channel.setOnClickListener(this);
+        txt_message.setOnClickListener(this);
+        txt_better.setOnClickListener(this);
+    }
+    //重置所有文本的选中状态
+    private void setSelected(){
+        txt_channel.setSelected(false);
+        txt_message.setSelected(false);
+        txt_better.setSelected(false);
+    }
+
+    //隐藏所有Fragment片段
+    private void hideAllFragment(FragmentTransaction fragmentTransaction){
+        if(fgLogin  != null)fragmentTransaction.hide(fgLogin);
+        if(fgVip    != null)fragmentTransaction.hide(fgVip);
+        if(fgUser   != null)fragmentTransaction.hide(fgUser);
+    }
+
+
 
     String readProxyUrl() {
         SharedPreferences preferences = getSharedPreferences("shadowsocksProxyUrl", MODE_PRIVATE);
@@ -138,34 +208,88 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onClick(View v) {
-        if (switchProxy.isChecked()) {
-            return;
+        if((v.getId() == R.id.txt_channel)||(v.getId() == R.id.txt_message)||(v.getId() == R.id.txt_better) ){
+            FragmentTransaction fTransaction = fManager.beginTransaction();
+            hideAllFragment(fTransaction);
+            switch (v.getId()){
+                case R.id.txt_channel: //链接
+                    tableLayout.setVisibility(View.VISIBLE);
+                    setSelected();
+                    txt_channel.setSelected(true);
+                    break;
+                case R.id.txt_message: //VIP
+                    setSelected();
+                    txt_message.setSelected(true);
+                    tableLayout.setVisibility(View.GONE);
+                    if(fgVip == null){
+                        fgVip = new VipFragment();
+                        fTransaction.add(R.id.ly_content,fgVip);
+                    }else{
+                        fTransaction.show(fgVip);
+                    }
+                    break;
+
+                case R.id.txt_better:  //我的
+                    setSelected();
+                    txt_better.setSelected(true);
+
+                    tableLayout.setVisibility(View.GONE);
+                    //TODO：判断用户的登录状态，已经登录显示fgUser，未登录显示fgLogin
+                    if(MyPreference.getInstance(this).getLoginName().length()<=0){
+                        //未登录
+                        if(fgLogin == null){
+                            fgLogin = new LoginFragment();
+                            fTransaction.add(R.id.ly_content,fgLogin);
+                        }else{
+                            fTransaction.show(fgLogin);
+                        }
+                    }else{
+                        //已经登录
+                        if(fgUser == null){
+                            fgUser = new UserFragment();
+                            fTransaction.add(R.id.ly_content,fgUser);
+                        }else{
+                            fTransaction.show(fgUser);
+                        }
+                    }
+
+                    break;
+            }
+            fTransaction.commit();
+
+        }else{
+            if (switchProxy.isChecked()) {
+                return;
+            }
+
+            if (v.getTag().toString().equals("ProxyUrl")){
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.config_url)
+                        .setItems(new CharSequence[]{
+                                getString(R.string.config_url_scan),
+                                getString(R.string.config_url_manual)
+                        }, new OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                switch (i) {
+                                    case 0:
+                                        scanForProxyUrl();
+                                        break;
+                                    case 1:
+                                        showProxyUrlInputDialog();
+                                        break;
+                                }
+                            }
+                        })
+                        .show();
+            } else if (v.getTag().toString().equals("AppSelect")){
+                System.out.println("abc");
+                startActivity(new Intent(this, AppManager.class));
+            }
         }
 
-        if (v.getTag().toString().equals("ProxyUrl")){
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.config_url)
-                    .setItems(new CharSequence[]{
-                            getString(R.string.config_url_scan),
-                            getString(R.string.config_url_manual)
-                    }, new OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            switch (i) {
-                                case 0:
-                                    scanForProxyUrl();
-                                    break;
-                                case 1:
-                                    showProxyUrlInputDialog();
-                                    break;
-                            }
-                        }
-                    })
-                    .show();
-        } else if (v.getTag().toString().equals("AppSelect")){
-            System.out.println("abc");
-            startActivity(new Intent(this, AppManager.class));
-        }
+
+
     }
 
     private void scanForProxyUrl() {
@@ -271,6 +395,7 @@ public class MainActivity extends Activity implements
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        Log.d(TAG, "鬼知道是什么=====》》》》》》》onActivityResult: ");
         if (requestCode == START_VPN_SERVICE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 startVPNService();
@@ -372,6 +497,7 @@ public class MainActivity extends Activity implements
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "生命周期==========>>>>>>>>  onResume: ");
         if (AppProxyManager.isLollipopOrAbove) {
             if (AppProxyManager.Instance.proxyAppInfo.size() != 0) {
                 String tmpString = "";
@@ -385,6 +511,7 @@ public class MainActivity extends Activity implements
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG, "生命周期==========>>>>>>>>  onDestroy: ");
         LocalVpnService.removeOnStatusChangedListener(this);
         super.onDestroy();
     }
